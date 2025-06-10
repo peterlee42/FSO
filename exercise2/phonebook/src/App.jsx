@@ -101,7 +101,7 @@ const App = () => {
       
       <Filter searchName={searchName} handleSearchName={handleSearchName} />
 
-      <h2>Add a New</h2>
+      <h2>Add a New Person</h2>
       
       <PersonForm 
         addPerson={addPerson}

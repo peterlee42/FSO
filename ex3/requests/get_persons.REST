@@ -1,0 +1,17 @@
+### Get all persons ###
+GET http://localhost:3001/api/persons
+
+### Get specific person ###
+GET http://localhost:3001/api/persons/6843886bbcdcf2fe0b637cee
+
+### Add new person ###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Joe Momma",
+  "number": "119"
+}
+
+### Delete Person:
+DELETE http://localhost:3001/api/persons/6848994bc97ac7ad388af789
