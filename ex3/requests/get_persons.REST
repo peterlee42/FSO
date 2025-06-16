@@ -13,5 +13,15 @@ Content-Type: application/json
   "number": "119"
 }
 
-### Delete Person:
-DELETE http://localhost:3001/api/persons/6848994bc97ac7ad388af789
+### Delete Person ###
+DELETE http://localhost:3001/api/persons/6847865ee0e9a095e3eeddce
+
+### Change number ###
+POST http://localhost:3001/api/persons/6843886bbcdcf2fe0b637cee
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "number": "12345",
+  "id": "6843886bbcdcf2fe0b637cee"
+}
