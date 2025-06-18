@@ -89,7 +89,7 @@ const errorHandler = (err, request, response, next) => {
 		return response.status(400).json({ error: err.message });
 	}
 
-	next(error);
+	next(err);
 };
 
 app.use(errorHandler);

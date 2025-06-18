@@ -26,7 +26,7 @@ const personSchema = new mongoose.Schema({
 			validator: (v) => {
 				const parts = v.split('-');
 
-				if (parts.length != 2) {
+				if (parts.length !== 2) {
 					return false;
 				}
 
