@@ -1,5 +1,3 @@
-const blog = require('../models/blog');
-
 const dummy = (blogs) => {
 	return 1;
 };
@@ -40,7 +38,6 @@ const mostBlogs = (blogs) => {
 
 	for (const author in counts) {
 		if (counts[author] > mostBloggedAuthor.blogs) {
-			console.log(author, counts[author]);
 			mostBloggedAuthor = { author, blogs: counts[author] };
 		}
 	}
