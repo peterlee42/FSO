@@ -13,13 +13,25 @@ const unknownEndpoint = (req, res) => {
 };
 
 const errorHandler = (err, req, res, next) => {
-	logger.error(err);
-
 	if (err.name === 'CastError') {
-		req.status(400).send({ error: 'malformatted id' });
+		return res.status(400).send({ error: 'malformatted id' });
+	} else if (
+		err.name === 'ValidationError' &&
+		err.message.includes('username: Path `username`') &&
+		err.message.includes('shorter than the minimum allowed length (3)')
+	) {
+		return res
+			.status(400)
+			.send({ error: 'expected `username` to be at least 3 characters long' });
 	} else if (err.name === 'ValidationError') {
-		req.status(400).send({ error: err.message });
+		return res.status(400).send({ error: err.message });
+	} else if (
+		err.name === 'MongoServerError' &&
+		err.message.includes('E11000 duplicate key error')
+	) {
+		return res.status(400).send({ error: 'expected `username` to be unique' });
 	}
+
 	next(err);
 };
 

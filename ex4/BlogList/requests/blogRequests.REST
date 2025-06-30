@@ -6,9 +6,10 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-	"title": "Some Book",
-	"author": "John Doe",
-	"url": "www.fakewebsite.com"
+	"title": "New Book V3",
+	"author": "Jane Doe",
+	"url": "www.janedoebooks.com",
+	"userId": "68609aeb414527252b56c95b"
 }
 
 ### BAD POST REQUEST ###
@@ -21,4 +22,4 @@ Content-Type: application/json
 }
 
 ### DELETE REQUEST ###
-DELETE http://localhost:3003/api/blogs/12
+DELETE http://localhost:3003/api/blogs/686227a6cd4143e278b4e398
