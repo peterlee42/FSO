@@ -1,4 +1,6 @@
 const logger = require('./logger');
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
 
 const requestLogger = (req, res, next) => {
 	logger.info('Method', req.method);
@@ -30,20 +32,14 @@ const errorHandler = (err, req, res, next) => {
 		err.message.includes('E11000 duplicate key error')
 	) {
 		return res.status(400).send({ error: 'expected `username` to be unique' });
+	} else if (err.name === 'JsonWebTokenError') {
+		return res.status(401).json({ error: 'token invalid' });
 	}
 
 	next(err);
 };
 
-const checkBlogAttributes = (req, res, next) => {
-	if (
-		req.body.author === undefined ||
-		req.body.title === undefined ||
-		req.body.url === undefined
-	) {
-		return res.status(400).json({ error: 'Missing required blog fields' });
-	}
-
+const setDefaultBlogFields = (req, res, next) => {
 	if (req.body.likes === undefined) {
 		req.body.likes = 0;
 	}
@@ -51,9 +47,40 @@ const checkBlogAttributes = (req, res, next) => {
 	next();
 };
 
+const tokenExtractor = (req, res, next) => {
+	const authorization = req.get('authorization');
+	if (authorization && authorization.startsWith('Bearer ')) {
+		req.token = authorization.replace('Bearer ', '');
+	} else {
+		req.token = null;
+	}
+
+	next();
+};
+
+const userExtractor = async (req, res, next) => {
+	try {
+		const decodedToken = jwt.verify(req.token, process.env.SECRET);
+		if (!decodedToken.id) {
+			return res.status(401).json({ error: 'token invalid' });
+		}
+
+		const user = await User.findById(decodedToken.id);
+		if (!user) {
+			return res.status(401).json({ error: 'userId missing or not valid' });
+		}
+		req.user = user;
+		next();
+	} catch (err) {
+		next(err);
+	}
+};
+
 module.exports = {
 	requestLogger,
 	unknownEndpoint,
 	errorHandler,
-	checkBlogAttributes,
+	setDefaultBlogFields,
+	tokenExtractor,
+	userExtractor,
 };

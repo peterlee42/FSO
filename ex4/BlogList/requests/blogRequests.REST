@@ -4,12 +4,12 @@ GET http://localhost:3003/api/blogs
 ### GOOD POST REQUEST ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI0IiwiaWQiOiI2ODYyY2U2OTlkNGMzZTIxZTIxYzIzNDQiLCJpYXQiOjE3NTE1OTY4MTMsImV4cCI6MTc1MTYwMDQxM30.ymJsHFH71zFwct0e0AQiC7ruJ_cq0_9RnD3odzkeAs8  
 
 {
-	"title": "New Book V3",
-	"author": "Jane Doe",
-	"url": "www.janedoebooks.com",
-	"userId": "68609aeb414527252b56c95b"
+	"title": "Book About Bacon 4",
+	"author": "Wolfram Alpha",
+	"url": "www.baconbacon.com"
 }
 
 ### BAD POST REQUEST ###
@@ -22,4 +22,15 @@ Content-Type: application/json
 }
 
 ### DELETE REQUEST ###
-DELETE http://localhost:3003/api/blogs/686227a6cd4143e278b4e398
+DELETE http://localhost:3003/api/blogs/68673f363370993b79bd9558
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI0IiwiaWQiOiI2ODYyY2U2OTlkNGMzZTIxZTIxYzIzNDQiLCJpYXQiOjE3NTEzMTAxMjYsImV4cCI6MTc1MTMxMzcyNn0.U2JM1caZscU2826EM8yqoeVIkVfv-WckSOTrqXw-wDA
+
+### PUT REQUEST ###
+PUT http://localhost:3003/api/blogs/6867435d2e20e620297beee1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXI0IiwiaWQiOiI2ODYyY2U2OTlkNGMzZTIxZTIxYzIzNDQiLCJpYXQiOjE3NTE2NTA4MzEsImV4cCI6MTc1MTY1NDQzMX0.NOznuJ-5JoakCgs_Vsg1vHCRGnK6Gnywq93UweYoXPk
+
+{
+	"author": "bacon guy",
+	"url": "www.baconbacon.com"
+}

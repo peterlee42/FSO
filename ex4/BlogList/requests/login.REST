@@ -1,0 +1,17 @@
+### LOGIN REQUEST user3 ###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "user3",
+    "password": "123456789"
+}
+
+### LOGIN REQUESTS user4 
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username": "user4",
+    "password": "123456789"
+}
