@@ -4,7 +4,7 @@ GET http://localhost:3003/api/blogs
 ### GOOD POST REQUEST ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIzIiwiaWQiOiI2ODYyMjg4MTk2MjBlZGFjYjhhNzM3ZTAiLCJpYXQiOjE3NTI0NTYzNjMsImV4cCI6MTc1MjQ1OTk2M30.8DRjHt2QuVWtSO8qd_XcKgkAzeMOpZ1I1REmG-xc17M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY4Nzk0M2RmODQxNTA4NjlhNWU3YjIyOCIsImlhdCI6MTc1Mjc4ODcwNywiZXhwIjoxNzUyNzkyMzA3fQ.PXhXbzoSJ-c65vUF4zAecaj5uLjX_8aFPSIJxlfgqcA
 
 {
 	"title": "Book About Bacon 5",

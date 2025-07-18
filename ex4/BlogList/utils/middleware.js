@@ -33,7 +33,9 @@ const errorHandler = (err, req, res, next) => {
 	) {
 		return res.status(400).send({ error: 'expected `username` to be unique' });
 	} else if (err.name === 'JsonWebTokenError') {
-		return res.status(401).json({ error: 'token invalid' });
+		return res.status(401).send({ error: 'token invalid' });
+	} else if (err.name === 'TokenExpiredError') {
+		return res.status(403).send({ error: 'token has expired' });
 	}
 
 	next(err);
@@ -61,6 +63,7 @@ const tokenExtractor = (req, res, next) => {
 const userExtractor = async (req, res, next) => {
 	try {
 		const decodedToken = jwt.verify(req.token, process.env.SECRET);
+
 		if (!decodedToken.id) {
 			return res.status(401).json({ error: 'token invalid' });
 		}

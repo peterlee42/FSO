@@ -17,8 +17,27 @@ const create = async (blog) => {
 	return response.data;
 };
 
+const update = async (blog) => {
+	const response = await axios.put(`${baseUrl}/${blog.id}`, blog, {
+		headers: {
+			Authorization: token,
+		},
+	});
+
+	return response.data;
+};
+
 const setToken = (newToken) => {
 	token = `Bearer ${newToken}`;
 };
 
-export default { getAll, setToken, create };
+const verifyToken = (savedToken) => {
+	const payload = JSON.parse(atob(savedToken.split('.')[1]));
+	if (payload?.exp * 1000 >= Date.now()) {
+		return true;
+	} else {
+		return false;
+	}
+};
+
+export default { getAll, setToken, create, update, verifyToken };

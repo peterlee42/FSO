@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
 const { setDefaultBlogFields, userExtractor } = require('../utils/middleware');
@@ -9,6 +8,14 @@ blogsRouter.get('/', async (req, res) => {
 		name: 1,
 	});
 	res.json(blogsList);
+});
+
+blogsRouter.get('/:id', async (req, res) => {
+	const blog = await Blog.findById(req.params.id).populate('user', {
+		username: 1,
+		name: 1,
+	});
+	res.json(blog);
 });
 
 blogsRouter.delete('/:id', userExtractor, async (req, res, next) => {
@@ -72,6 +79,7 @@ blogsRouter.put(
 					.status(401)
 					.json({ error: 'user does not have access to this resource' });
 			}
+
 			originalBlog.author = author;
 			originalBlog.title = title;
 			originalBlog.url = url;
@@ -79,7 +87,7 @@ blogsRouter.put(
 			originalBlog.user = req.user._id;
 
 			const updatedBlog = await originalBlog.save();
-			res.status(200).json(updatedBlog);
+			res.status(200).json(updatedBlog).end();
 		} catch (err) {
 			next(err);
 		}
