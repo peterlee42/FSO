@@ -4,10 +4,10 @@ GET http://localhost:3003/api/blogs
 ### GOOD POST REQUEST ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY4Nzk0M2RmODQxNTA4NjlhNWU3YjIyOCIsImlhdCI6MTc1Mjc4ODcwNywiZXhwIjoxNzUyNzkyMzA3fQ.PXhXbzoSJ-c65vUF4zAecaj5uLjX_8aFPSIJxlfgqcA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY4Nzk0M2RmODQxNTA4NjlhNWU3YjIyOCIsImlhdCI6MTc1Mjk1NDAzNiwiZXhwIjoxNzUyOTU3NjM2fQ.TkmX2DgjqBORU0JuDpAU3qAl2LdEz2qoavF2Les53qk
 
 {
-	"title": "Book About Bacon 5",
+	"title": "Book About Bacon 4",
 	"author": "Wolfram Alpha",
 	"url": "www.baconbacon.com"
 }

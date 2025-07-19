@@ -41,16 +41,4 @@ const setToken = (newToken) => {
 	token = `Bearer ${newToken}`;
 };
 
-const verifyToken = (savedToken) => {
-	const base64Url = savedToken.split('.')[1];
-	const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-	const payload = JSON.parse(window.atob(base64));
-
-	if (payload?.exp >= Date.now() / 1000) {
-		return true;
-	} else {
-		return false;
-	}
-};
-
-export default { getAll, setToken, create, update, verifyToken, remove };
+export default { getAll, setToken, create, update, remove };

@@ -51,11 +51,14 @@ blogsRouter.post(
 			});
 
 			const savedBlog = await blog.save();
-
 			req.user.blogs = req.user.blogs.concat(savedBlog._id);
 			await req.user.save();
 
-			res.status(201).json(savedBlog);
+			const returnedBlog = await savedBlog.populate('user', {
+				username: 1,
+				name: 1,
+			});
+			res.status(201).json(returnedBlog);
 		} catch (err) {
 			next(err);
 		}
@@ -74,17 +77,22 @@ blogsRouter.put(
 				return res.status(404).json({ error: 'blog not found' });
 			}
 
-			if (originalBlog.user.toString() !== req.user._id.toString()) {
+			const authorized =
+				originalBlog.user.toString() !== req.user._id.toString();
+
+			if (!authorized && originalBlog.likes !== likes) {
+				originalBlog.likes = likes;
+			} else if (!authorized) {
 				return res
 					.status(401)
 					.json({ error: 'user does not have access to this resource' });
+			} else {
+				originalBlog.author = author;
+				originalBlog.title = title;
+				originalBlog.url = url;
+				originalBlog.likes = likes;
+				originalBlog.user = req.user._id;
 			}
-
-			originalBlog.author = author;
-			originalBlog.title = title;
-			originalBlog.url = url;
-			originalBlog.likes = likes;
-			originalBlog.user = req.user._id;
 
 			const updatedBlog = await originalBlog.save();
 			res.status(200).json(updatedBlog).end();

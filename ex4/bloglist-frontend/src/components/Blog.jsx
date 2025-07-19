@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import BlogInfo from './BlogInfo';
 
-const Blog = ({ blog, removeBlog }) => {
+const Blog = ({ blog, removeBlog, addLikes, user }) => {
 	const { title } = blog;
 	const [visible, setVisible] = useState(false);
 
@@ -22,7 +22,14 @@ const Blog = ({ blog, removeBlog }) => {
 				<div style={{ fontWeight: 'bold' }}>{title}</div> by {blog.author}{' '}
 				<button onClick={changeVisibility}>{visible ? 'hide' : 'show'}</button>
 			</div>
-			{visible && <BlogInfo blog={blog} removeBlog={removeBlog} />}
+			{visible && (
+				<BlogInfo
+					blog={blog}
+					removeBlog={removeBlog}
+					addLikes={addLikes}
+					user={user}
+				/>
+			)}
 		</div>
 	);
 };

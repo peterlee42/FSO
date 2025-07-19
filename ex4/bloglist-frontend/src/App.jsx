@@ -7,6 +7,7 @@ import BlogForm from './components/BlogForm';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
+import authService from './services/auth';
 
 // -----------------------------------------------------------------------
 
@@ -22,12 +23,14 @@ const App = () => {
 	const blogFormRef = useRef();
 	const blogFormToggleRef = useRef();
 
+	const timeoutRef = useRef();
+
 	useEffect(() => {
 		const savedUser = JSON.parse(window.localStorage.getItem('blogAppUser'));
 
 		if (!savedUser) {
 			return;
-		} else if (savedUser && blogService.verifyToken(savedUser.token)) {
+		} else if (savedUser && authService.checkTokenExpiry(savedUser.token)) {
 			setUser(savedUser);
 			blogService.setToken(savedUser.token);
 		} else {
@@ -37,7 +40,29 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
-		blogService.getAll().then((blogs) => setBlogs(blogs));
+		if (message) {
+			clearTimeout(timeoutRef.current);
+
+			timeoutRef.current = setTimeout(() => {
+				setMessage('');
+				setMessageType('');
+				timeoutRef.current = null;
+			}, 5000);
+		}
+
+		return () => {
+			if (timeoutRef.current) {
+				clearTimeout(timeoutRef.current);
+			}
+		};
+	}, [message]);
+
+	useEffect(() => {
+		const getBlogs = async () => {
+			const blogs = await blogService.getAll();
+			setBlogs(blogs);
+		};
+		getBlogs();
 	}, []);
 
 	const handleLogin = async (e) => {
@@ -58,11 +83,6 @@ const App = () => {
 			setMessage('wrong username or password');
 			setMessageType('error');
 		}
-
-		setTimeout(() => {
-			setMessage('');
-			setMessageType('');
-		}, 5000);
 	};
 
 	const handleLogout = () => {
@@ -86,28 +106,51 @@ const App = () => {
 			setMessage('could not create a new blog');
 			setMessageType('error');
 		}
-
-		setTimeout(() => {
-			setMessage('');
-			setMessageType('');
-		}, 5000);
 	};
 
 	const removeBlog = async (blogToRemove) => {
+		let [message, messageType] = ['', ''];
 		try {
-			await blogService.remove(blogToRemove.id);
-			setMessage(`removed ${blogToRemove.title} by ${blogToRemove.author}`);
-			setMessageType('success');
-			setBlogs(blogs.filter((blog) => blog.id != blogToRemove.id));
+			if (
+				window.confirm(
+					`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`
+				)
+			) {
+				await blogService.remove(blogToRemove.id);
+				message = `removed ${blogToRemove.title} by ${blogToRemove.author}`;
+				messageType = 'success';
+				setBlogs(blogs.filter((blog) => blog.id != blogToRemove.id));
+			}
 		} catch (err) {
-			setMessage(`could not remove blog`);
-			setMessageType('error');
+			message = `could not remove blog`;
+			messageType = 'error';
 		}
 
-		setTimeout(() => {
-			setMessage('');
-			setMessageType('');
-		}, 5000);
+		setMessage(message);
+		setMessageType(messageType);
+	};
+
+	const addLikes = async (updatedBlog) => {
+		const newLikes = updatedBlog.likes + 1;
+
+		try {
+			setBlogs(
+				blogs.map((blog) => {
+					if (blog.id == updatedBlog.id) {
+						return { ...blog, likes: blog.likes + 1 };
+					} else {
+						return blog;
+					}
+				})
+			);
+			await blogService.update({
+				...updatedBlog,
+				likes: newLikes,
+			});
+		} catch (err) {
+			setBlogs(blogs);
+			console.log(err);
+		}
 	};
 
 	const loginForm = () => (
@@ -138,34 +181,44 @@ const App = () => {
 		</div>
 	);
 
-	const blogsList = () => (
-		<div>
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-				<div>
-					<h1 style={{ margin: '20px 0px 0px 0px' }}>blogs</h1>
-					<Notification message={message} messageType={messageType} />
-				</div>
-				<div style={{ display: 'flex', gap: '5px' }}>
-					<div>{user.name} is logged in</div>
-					<button onClick={handleLogout}>logout</button>
-				</div>
-				<Togglable ref={blogFormToggleRef}>
-					<BlogForm handleCreate={addBlog} ref={blogFormRef} />
-				</Togglable>
-				<div
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						gap: '5px',
-					}}
-				>
-					{blogs.map((blog) => (
-						<Blog key={blog.id} blog={blog} removeBlog={removeBlog} />
-					))}
+	const blogsList = () => {
+		const sortedBlogs = blogs.sort((blog1, blog2) => blog2.likes - blog1.likes);
+
+		return (
+			<div>
+				<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+					<div>
+						<h1 style={{ margin: '20px 0px 0px 0px' }}>blogs</h1>
+						<Notification message={message} messageType={messageType} />
+					</div>
+					<div style={{ display: 'flex', gap: '5px' }}>
+						<div>{user.name} is logged in</div>
+						<button onClick={handleLogout}>logout</button>
+					</div>
+					<Togglable ref={blogFormToggleRef}>
+						<BlogForm handleCreate={addBlog} ref={blogFormRef} />
+					</Togglable>
+					<div
+						style={{
+							display: 'flex',
+							flexDirection: 'column',
+							gap: '5px',
+						}}
+					>
+						{sortedBlogs.map((blog) => (
+							<Blog
+								key={blog.id}
+								blog={blog}
+								user={user}
+								removeBlog={removeBlog}
+								addLikes={addLikes}
+							/>
+						))}
+					</div>
 				</div>
 			</div>
-		</div>
-	);
+		);
+	};
 
 	return <div>{user === null ? loginForm() : blogsList()}</div>;
 };
