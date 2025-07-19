@@ -27,17 +27,30 @@ const update = async (blog) => {
 	return response.data;
 };
 
+const remove = async (blogId) => {
+	const response = await axios.delete(`${baseUrl}/${blogId}`, {
+		headers: {
+			Authorization: token,
+		},
+	});
+
+	return response.data;
+};
+
 const setToken = (newToken) => {
 	token = `Bearer ${newToken}`;
 };
 
 const verifyToken = (savedToken) => {
-	const payload = JSON.parse(atob(savedToken.split('.')[1]));
-	if (payload?.exp * 1000 >= Date.now()) {
+	const base64Url = savedToken.split('.')[1];
+	const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+	const payload = JSON.parse(window.atob(base64));
+
+	if (payload?.exp >= Date.now() / 1000) {
 		return true;
 	} else {
 		return false;
 	}
 };
 
-export default { getAll, setToken, create, update, verifyToken };
+export default { getAll, setToken, create, update, verifyToken, remove };

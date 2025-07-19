@@ -76,12 +76,12 @@ const App = () => {
 	const addBlog = async (e) => {
 		e.preventDefault();
 
-		blogFormToggleRef.current.toggleVisible();
 		try {
 			const savedBlog = await blogFormRef.current.addBlog();
 			setBlogs(blogs.concat(savedBlog));
 			setMessage(`${savedBlog.title} by ${savedBlog.author} has been added`);
 			setMessageType('success');
+			blogFormToggleRef.current.toggleVisible();
 		} catch (err) {
 			setMessage('could not create a new blog');
 			setMessageType('error');
@@ -92,9 +92,22 @@ const App = () => {
 			setMessageType('');
 		}, 5000);
 	};
-	const addLikes = async (e) => {
-		const updatedBlog = { ...blog, likes: blog.likes + 1 };
-		const response = await blogService.update(updatedBlog);
+
+	const removeBlog = async (blogToRemove) => {
+		try {
+			await blogService.remove(blogToRemove.id);
+			setMessage(`removed ${blogToRemove.title} by ${blogToRemove.author}`);
+			setMessageType('success');
+			setBlogs(blogs.filter((blog) => blog.id != blogToRemove.id));
+		} catch (err) {
+			setMessage(`could not remove blog`);
+			setMessageType('error');
+		}
+
+		setTimeout(() => {
+			setMessage('');
+			setMessageType('');
+		}, 5000);
 	};
 
 	const loginForm = () => (
@@ -147,7 +160,7 @@ const App = () => {
 					}}
 				>
 					{blogs.map((blog) => (
-						<Blog key={blog.id} blog={blog} />
+						<Blog key={blog.id} blog={blog} removeBlog={removeBlog} />
 					))}
 				</div>
 			</div>
