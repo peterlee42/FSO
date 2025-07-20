@@ -16,6 +16,7 @@ loginRouter.post('/', async (req, res) => {
 
 	const userForToken = {
 		username: user.username,
+		name: user.name,
 		id: user._id,
 	};
 
@@ -23,7 +24,12 @@ loginRouter.post('/', async (req, res) => {
 		expiresIn: 60 * 60,
 	});
 
-	res.status(200).send({ token, username: user.username, name: user.name });
+	res.status(200).send({
+		token,
+		username: user.username,
+		name: user.name,
+		id: user._id.toString(),
+	});
 });
 
 module.exports = loginRouter;

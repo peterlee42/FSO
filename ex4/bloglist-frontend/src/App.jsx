@@ -7,7 +7,6 @@ import BlogForm from './components/BlogForm';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
-import authService from './services/auth';
 
 // -----------------------------------------------------------------------
 
@@ -28,14 +27,9 @@ const App = () => {
 	useEffect(() => {
 		const savedUser = JSON.parse(window.localStorage.getItem('blogAppUser'));
 
-		if (!savedUser) {
-			return;
-		} else if (savedUser && authService.checkTokenExpiry(savedUser.token)) {
+		if (savedUser) {
 			setUser(savedUser);
 			blogService.setToken(savedUser.token);
-		} else {
-			window.localStorage.removeItem('blogAppUser');
-			window.location.reload();
 		}
 	}, []);
 

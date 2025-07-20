@@ -1,5 +1,3 @@
-import authService from '../services/auth';
-
 const BlogInfo = ({ blog, removeBlog, addLikes, user }) => {
 	const { author, url, likes } = blog;
 
@@ -11,8 +9,7 @@ const BlogInfo = ({ blog, removeBlog, addLikes, user }) => {
 		addLikes(blog);
 	};
 
-	const authorized =
-		user && blog && authService.getUserId(user.token) === blog.user.id;
+	const authorized = user.id === blog.user.id;
 
 	return (
 		<div>
