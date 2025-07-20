@@ -1,6 +1,7 @@
 import { useState, useImperativeHandle } from 'react';
+import propTypes from 'prop-types';
 
-const Togglable = ({ ref, children }) => {
+const Togglable = ({ buttonLabel, ref, children }) => {
 	const [visible, setVisible] = useState(false);
 
 	const showWhenVisible = { display: visible ? '' : 'none' };
@@ -17,7 +18,7 @@ const Togglable = ({ ref, children }) => {
 	return (
 		<div>
 			<div style={hideWhenVisible}>
-				<button onClick={toggleVisible}>new blog</button>
+				<button onClick={toggleVisible}>{buttonLabel}</button>
 			</div>
 			<div style={showWhenVisible}>
 				{children}
@@ -25,6 +26,10 @@ const Togglable = ({ ref, children }) => {
 			</div>
 		</div>
 	);
+};
+
+Togglable.propTypes = {
+	buttonLabel: propTypes.string.isRequired,
 };
 
 export default Togglable;

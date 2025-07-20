@@ -113,7 +113,7 @@ const App = () => {
 				await blogService.remove(blogToRemove.id);
 				message = `removed ${blogToRemove.title} by ${blogToRemove.author}`;
 				messageType = 'success';
-				setBlogs(blogs.filter((blog) => blog.id != blogToRemove.id));
+				setBlogs(blogs.filter((blog) => blog.id !== blogToRemove.id));
 			}
 		} catch (err) {
 			message = `could not remove blog`;
@@ -130,7 +130,7 @@ const App = () => {
 		try {
 			setBlogs(
 				blogs.map((blog) => {
-					if (blog.id == updatedBlog.id) {
+					if (blog.id === updatedBlog.id) {
 						return { ...blog, likes: blog.likes + 1 };
 					} else {
 						return blog;
@@ -189,7 +189,7 @@ const App = () => {
 						<div>{user.name} is logged in</div>
 						<button onClick={handleLogout}>logout</button>
 					</div>
-					<Togglable ref={blogFormToggleRef}>
+					<Togglable buttonLabel={'new blog'} ref={blogFormToggleRef}>
 						<BlogForm handleCreate={addBlog} ref={blogFormRef} />
 					</Togglable>
 					<div
