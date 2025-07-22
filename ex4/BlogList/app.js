@@ -8,7 +8,7 @@ const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 
 const app = express();
-console.log('hello');
+
 logger.info('connecting to', config.MONGODB_URI);
 
 (async (req, res, next) => {
