@@ -1,26 +1,26 @@
 const BlogInfo = ({ blog, removeBlog, addLikes, user }) => {
-	const { author, url, likes } = blog;
+  const { author, url, likes } = blog;
 
-	const handleRemove = () => {
-		removeBlog(blog);
-	};
+  const handleRemove = () => {
+    removeBlog(blog);
+  };
 
-	const handleLikes = () => {
-		addLikes(blog);
-	};
+  const handleLikes = () => {
+    addLikes(blog);
+  };
 
-	const authorized = user.id === blog.user.id;
+  const authorized = user.id === blog.user.id;
 
-	return (
-		<div>
-			<div>{url}</div>
-			<div>
+  return (
+    <div>
+      <div>{url}</div>
+      <div>
 				likes: {likes} <button onClick={handleLikes}>like</button>
-			</div>
-			<div>{author}</div>
-			{authorized && <button onClick={handleRemove}>remove</button>}
-		</div>
-	);
+      </div>
+      <div>{author}</div>
+      {authorized && <button onClick={handleRemove}>remove</button>}
+    </div>
+  );
 };
 
 export default BlogInfo;

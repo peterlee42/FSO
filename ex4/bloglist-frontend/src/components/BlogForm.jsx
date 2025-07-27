@@ -1,63 +1,60 @@
-import { useState, useImperativeHandle } from 'react';
+import { useState } from 'react';
 
-import blogService from '../services/blogs';
+const BlogForm = ({ createBlog }) => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
 
-const BlogForm = ({ handleCreate, ref }) => {
-	const [title, setTitle] = useState('');
-	const [author, setAuthor] = useState('');
-	const [url, setUrl] = useState('');
+  const addBlog = async (e) => {
+    e.preventDefault();
+    const newBlog = {
+      author,
+      title,
+      url,
+    };
 
-	const addBlog = async () => {
-		const newBlog = {
-			author,
-			title,
-			url,
-		};
+    createBlog(newBlog);
 
-		const savedBlog = await blogService.create(newBlog);
-		setAuthor('');
-		setTitle('');
-		setUrl('');
+    setAuthor('');
+    setTitle('');
+    setUrl('');
+  };
 
-		return savedBlog;
-	};
-
-	useImperativeHandle(ref, () => {
-		return { addBlog };
-	});
-
-	return (
-		<form onSubmit={handleCreate}>
-			<div>
-				title:
-				<input
-					type='text'
-					name='Title'
-					value={title}
-					onChange={({ target }) => setTitle(target.value)}
-				/>
-			</div>
-			<div>
-				author:
-				<input
-					type='text'
-					name='Author'
-					value={author}
-					onChange={({ target }) => setAuthor(target.value)}
-				/>
-			</div>
-			<div>
-				url:
-				<input
-					type='text'
-					name='Url'
-					value={url}
-					onChange={({ target }) => setUrl(target.value)}
-				/>
-			</div>
-			<button type='submit'>create</button>
-		</form>
-	);
+  return (
+    <form onSubmit={addBlog}>
+      <div>
+        title:
+        <input
+          type='text'
+          name='Title'
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+          id='title-input'
+        />
+      </div>
+      <div>
+        author:
+        <input
+          type='text'
+          name='Author'
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+          id='author-input'
+        />
+      </div>
+      <div>
+        url:
+        <input
+          type='text'
+          name='Url'
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
+          id='url-input'
+        />
+      </div>
+      <button type='submit'>create</button>
+    </form>
+  );
 };
 
 export default BlogForm;

@@ -12,12 +12,12 @@ const app = express();
 logger.info('connecting to', config.MONGODB_URI);
 
 (async (req, res, next) => {
-	try {
-		await mongoose.connect(config.MONGODB_URI);
-		logger.info('connected to MongoDB');
-	} catch (err) {
-		next(err);
-	}
+  try {
+    await mongoose.connect(config.MONGODB_URI);
+    logger.info('connected to MongoDB');
+  } catch (err) {
+    next(err);
+  }
 })();
 
 app.use(express.json());
