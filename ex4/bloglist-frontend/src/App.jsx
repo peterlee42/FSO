@@ -105,7 +105,7 @@ const App = () => {
     try {
       if (
         window.confirm(
-          `Remove blog ${blogToRemove.title} by ${blogToRemove.author}`
+          `Remove blog ${blogToRemove.title} by ${blogToRemove.author}`,
         )
       ) {
         await blogService.remove(blogToRemove.id);
@@ -133,7 +133,7 @@ const App = () => {
           } else {
             return blog;
           }
-        })
+        }),
       );
       await blogService.update({
         ...updatedBlog,
@@ -153,6 +153,7 @@ const App = () => {
         <div>
           username
           <input
+            data-testid='username'
             type='text'
             value={username}
             name='Username'
@@ -162,6 +163,7 @@ const App = () => {
         <div>
           password
           <input
+            data-testid='password'
             type='password'
             value={password}
             name='Password'
