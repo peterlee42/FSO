@@ -17,7 +17,7 @@ const Blog = ({ blog, removeBlog, addLikes, user }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div data-testid='blog-item' style={blogStyle}>
       <div style={{ display: 'flex', gap: '5px' }}>
         <div style={{ fontWeight: 'bold' }}>{title}</div> by {blog.author}{' '}
         <button onClick={changeVisibility}>{visible ? 'hide' : 'show'}</button>

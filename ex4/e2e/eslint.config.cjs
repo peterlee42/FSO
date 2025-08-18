@@ -1,13 +1,13 @@
-import globals from 'globals';
-import js from '@eslint/js';
-import stylisticJs from '@stylistic/eslint-plugin';
+const globals = require('globals');
+const js = require('@eslint/js');
+const stylisticJs = require('@stylistic/eslint-plugin');
 
-export default [
+module.exports = [
   js.configs.recommended,
   {
     files: ['**/*.js'],
     languageOptions: {
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         ...globals.node,
       },
