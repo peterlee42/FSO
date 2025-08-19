@@ -163,7 +163,7 @@ test.describe('Blog App', () => {
         ).toHaveCount(0);
       });
 
-      test.only('blogs are in the correct order', async ({ page }) => {
+      test('blogs are in the correct order', async ({ page }) => {
         // get all blogs and click show
         const blog_elements = await page.getByTestId('blog-item').all();
         for (const blog of blog_elements) {
