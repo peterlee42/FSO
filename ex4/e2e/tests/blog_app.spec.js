@@ -12,6 +12,14 @@ test.describe('Blog App', () => {
       },
     });
 
+    await request.post('/api/users/', {
+      data: {
+        name: 'Jane Smith',
+        username: 'anotheruser',
+        password: 'password456',
+      },
+    });
+
     page.goto('/');
   });
 
@@ -73,6 +81,29 @@ test.describe('Blog App', () => {
           page.getByText('playwright', { exact: true }),
         ).toBeVisible();
       });
+
+      test('blog can be liked', async ({ page }) => {
+        await page.getByRole('button', { name: 'show' }).click();
+        await page.getByRole('button', { name: 'like' }).click();
+        await expect(page.getByText('likes: 1')).toBeVisible();
+      });
+
+      test('blog can be deleted', async ({ page }) => {
+        const secondBlogElement = page
+          .getByTestId('blog-item')
+          .filter({ hasText: 'another test blog' });
+
+        await secondBlogElement.getByRole('button', { name: 'show' }).click();
+
+        page.on('dialog', async (dialog) => await dialog.accept());
+        await secondBlogElement.getByRole('button', { name: 'remove' }).click();
+
+        await expect(
+          page
+            .getByTestId('blog-item')
+            .filter({ hasText: 'another test blog' }),
+        ).toHaveCount(0);
+      });
     });
 
     test.describe('several blogs exist', () => {
@@ -95,11 +126,62 @@ test.describe('Blog App', () => {
       });
 
       test('shows more information about one blog', async ({ page }) => {
-        const otherBlogText = page.getByText('second blog');
-        const otherBlogElement = otherBlogText.locator('../..');
+        const secondBlogText = page.getByText('second blog');
+        const secondBlogElement = secondBlogText.locator('../..');
 
-        await otherBlogElement.getByRole('button', { name: 'show' }).click();
-        await expect(otherBlogElement.getByText('hide')).toBeVisible();
+        await secondBlogElement.getByRole('button', { name: 'show' }).click();
+        await expect(
+          secondBlogElement.getByRole('button', { name: 'hide' }),
+        ).toBeVisible();
+      });
+
+      test('blog can be liked', async ({ page }) => {
+        const secondBlogText = page.getByText('second blog');
+        const secondBlogElement = secondBlogText.locator('../..');
+
+        secondBlogElement.getByRole('button', { name: 'show' }).click();
+        secondBlogElement.getByRole('button', { name: 'like' }).click();
+
+        await expect(page.getByText('likes: 1')).toBeVisible();
+      });
+
+      test('a blog can be deleted', async ({ page }) => {
+        const secondBlogElement = page
+          .getByTestId('blog-item')
+          .filter({ hasText: 'second blog' });
+
+        await secondBlogElement.getByRole('button', { name: 'show' }).click();
+
+        page.on('dialog', async (dialog) => await dialog.accept());
+        await secondBlogElement.getByRole('button', { name: 'remove' }).click();
+
+        await expect(
+          page.getByTestId('blog-item').filter({ hasText: 'second blog' }),
+        ).toHaveCount(0);
+      });
+    });
+
+    test.describe('exists multiple post from different users', () => {
+      test.beforeEach(async ({ page }) => {
+        await page.getByRole('button', { name: 'logout' }).click();
+        await loginWith(page, 'anotheruser', 'password456');
+        await createBlog(page, {
+          title: `another user's post`,
+          author: 'Jane Smith',
+          url: 'www.example.com',
+        });
+
+        await page.getByRole('button', { name: 'logout' }).click();
+        await loginWith(page, 'testinguser', 'password123');
+      });
+
+      test.only('user can only remove their own posts', async ({ page }) => {
+        const otherUserBlogText = page.getByText(`another user's post`);
+        const otherUserBlogElement = otherUserBlogText.locator('../..');
+
+        await expect(
+          otherUserBlogElement.getByRole('button', { name: 'remove' }),
+        ).toHaveCount(0);
       });
     });
   });
