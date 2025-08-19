@@ -15,7 +15,8 @@ const BlogInfo = ({ blog, removeBlog, addLikes, user }) => {
     <div>
       <div>{url}</div>
       <div>
-				likes: {likes} <button onClick={handleLikes}>like</button>
+        likes: <div data-testid='likes-count'>{likes}</div>{' '}
+        <button onClick={handleLikes}>like</button>
       </div>
       <div>{author}</div>
       {authorized && <button onClick={handleRemove}>remove</button>}

@@ -112,16 +112,19 @@ test.describe('Blog App', () => {
           title: 'first blog',
           author: 'playwright',
           url: 'www.playwright.dev',
+          likes: 1,
         });
         await createBlog(page, {
           title: 'second blog',
           author: 'playwright',
           url: 'www.playwright.dev',
+          likes: 3,
         });
         await createBlog(page, {
           title: 'third blog',
           author: 'playwright',
           url: 'www.playwright.dev',
+          likes: 5,
         });
       });
 
@@ -142,7 +145,7 @@ test.describe('Blog App', () => {
         secondBlogElement.getByRole('button', { name: 'show' }).click();
         secondBlogElement.getByRole('button', { name: 'like' }).click();
 
-        await expect(page.getByText('likes: 1')).toBeVisible();
+        await expect(page.getByText('likes: 4')).toBeVisible();
       });
 
       test('a blog can be deleted', async ({ page }) => {
@@ -158,6 +161,28 @@ test.describe('Blog App', () => {
         await expect(
           page.getByTestId('blog-item').filter({ hasText: 'second blog' }),
         ).toHaveCount(0);
+      });
+
+      test.only('blogs are in the correct order', async ({ page }) => {
+        // get all blogs and click show
+        const blog_elements = await page.getByTestId('blog-item').all();
+        for (const blog of blog_elements) {
+          await blog.getByRole('button', { name: 'show' }).click();
+        }
+
+        // blogs are sorted in non-increasing order of likes
+        const likes = await Promise.all(
+          blog_elements.map(async (blog) => {
+            const text = await blog.getByTestId('likes-count').innerText();
+            return Number(text);
+          }),
+        );
+
+        const is_sorted = likes.every((curr, i, arr) => {
+          i === 0 || curr <= arr[i - 1];
+        });
+
+        expect(is_sorted).toBe(true);
       });
     });
 
@@ -175,7 +200,7 @@ test.describe('Blog App', () => {
         await loginWith(page, 'testinguser', 'password123');
       });
 
-      test.only('user can only remove their own posts', async ({ page }) => {
+      test('user can only remove their own posts', async ({ page }) => {
         const otherUserBlogText = page.getByText(`another user's post`);
         const otherUserBlogElement = otherUserBlogText.locator('../..');
 
