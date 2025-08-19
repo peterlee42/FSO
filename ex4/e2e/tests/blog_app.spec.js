@@ -31,6 +31,8 @@ test.describe('Blog App', () => {
     const errorDiv = page.locator('.error');
     await expect(errorDiv).toContainText('wrong username or password');
     await expect(errorDiv).toHaveCSS('border-style', 'solid');
+
+    // color test
     // await expect(errorDiv).toHaveCSS('color', 'rgb(239,1,226)');
 
     await expect(page.getByText('John Doe is logged in')).not.toBeVisible();
